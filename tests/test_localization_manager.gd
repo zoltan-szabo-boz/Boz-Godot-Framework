@@ -121,47 +121,47 @@ func test_language_changed_event_payload():
 func test_translation_english():
 	LocalizationManager.set_language("en")
 
-	var translated = tr("GAME_TITLE")
-	assert_eq(translated, "Learn Godot!", "GAME_TITLE should translate to 'Learn Godot!' in English")
+	var translated = tr("Learn Godot!")
+	assert_eq(translated, "Learn Godot!", "'Learn Godot!' should translate to 'Learn Godot!' in English")
 
-	var button = tr("BUTTON_START_GAME")
-	assert_eq(button, "Start Game", "BUTTON_START_GAME should translate to 'Start Game' in English")
+	var button = tr("Start Game")
+	assert_eq(button, "Start Game", "'Start Game' should translate to 'Start Game' in English")
 
 # Test: Translation works for German
 func test_translation_german():
 	LocalizationManager.set_language("de")
 
-	var translated = tr("GAME_TITLE")
-	assert_eq(translated, "Lerne Godot!", "GAME_TITLE should translate to 'Lerne Godot!' in German")
+	var translated = tr("Learn Godot!")
+	assert_eq(translated, "Lerne Godot!", "'Learn Godot!' should translate to 'Lerne Godot!' in German")
 
-	var button = tr("BUTTON_START_GAME")
-	assert_eq(button, "Spiel starten", "BUTTON_START_GAME should translate to 'Spiel starten' in German")
+	var button = tr("Start Game")
+	assert_eq(button, "Spiel starten", "'Start Game' should translate to 'Spiel starten' in German")
 
 # Test: Translation works for Hungarian
 func test_translation_hungarian():
 	LocalizationManager.set_language("hu")
 
-	var translated = tr("GAME_TITLE")
-	assert_eq(translated, "Tanuld meg a Godót!", "GAME_TITLE should translate to 'Tanuld meg a Godót!' in Hungarian")
+	var translated = tr("Learn Godot!")
+	assert_eq(translated, "Tanuld meg a Godót!", "'Learn Godot!' should translate to 'Tanuld meg a Godót!' in Hungarian")
 
-	var button = tr("BUTTON_START_GAME")
-	assert_eq(button, "Játék indítása", "BUTTON_START_GAME should translate to 'Játék indítása' in Hungarian")
+	var button = tr("Start Game")
+	assert_eq(button, "Játék indítása", "'Start Game' should translate to 'Játék indítása' in Hungarian")
 
 # Test: Translation works for Japanese
 func test_translation_japanese():
 	LocalizationManager.set_language("ja")
 
-	var translated = tr("GAME_TITLE")
-	assert_eq(translated, "Godotを学ぼう！", "GAME_TITLE should translate to 'Godotを学ぼう！' in Japanese")
+	var translated = tr("Learn Godot!")
+	assert_eq(translated, "Godotを学ぼう！", "'Learn Godot!' should translate to 'Godotを学ぼう！' in Japanese")
 
-	var button = tr("BUTTON_START_GAME")
-	assert_eq(button, "ゲーム開始", "BUTTON_START_GAME should translate to 'ゲーム開始' in Japanese")
+	var button = tr("Start Game")
+	assert_eq(button, "ゲーム開始", "'Start Game' should translate to 'ゲーム開始' in Japanese")
 
 # Test: Translation with string formatting works
 func test_translation_with_formatting():
 	LocalizationManager.set_language("en")
 
-	var message = tr("MESSAGE_RESOLUTION_CHANGED") % [1920, 1080]
+	var message = tr("Changing resolution to %dx%d") % [1920, 1080]
 	assert_eq(message, "Changing resolution to 1920x1080", "String formatting with tr() should work")
 
 # Test: Missing translation key returns key itself
@@ -214,25 +214,25 @@ func test_multiple_language_switches():
 	LocalizationManager.set_language("en")
 	assert_eq(LocalizationManager.get_language(), "en", "Should switch back to English")
 
-# Test: All translation keys exist in both languages
+# Test: All translation keys exist in all languages
 func test_all_keys_exist_in_both_languages():
 	var test_keys = [
-		"GAME_TITLE",
-		"BUTTON_START_GAME",
-		"BUTTON_OPTIONS",
-		"BUTTON_QUIT",
-		"LABEL_RESOLUTION",
-		"BUTTON_FULLSCREEN",
-		"LABEL_LANGUAGE"
+		"Learn Godot!",
+		"Start Game",
+		"Options",
+		"Quit",
+		"Resolution",
+		"Fullscreen",
+		"Language"
 	]
 
-	# Test English
+	# Test English (source strings should equal themselves)
 	LocalizationManager.set_language("en")
 	for key in test_keys:
 		var translated = tr(key)
-		assert_ne(translated, key, "Key '%s' should have English translation" % key)
+		assert_eq(translated, key, "Key '%s' should translate to itself in English" % key)
 
-	# Test Hungarian
+	# Test Hungarian (should translate to Hungarian)
 	LocalizationManager.set_language("hu")
 	for key in test_keys:
 		var translated = tr(key)

@@ -53,7 +53,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer"]
 layout_mode = 2
 mouse_filter = 0
-text = "GAME_TITLE"
+text = "Learn Godot!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -71,19 +71,19 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 mouse_filter = 1
-text = "BUTTON_START_GAME"
+text = "Start Game"
 
 [node name="Options" type="Button" parent="MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer/ButtonMargin/ButtonContainer"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 mouse_filter = 1
-text = "BUTTON_OPTIONS"
+text = "Options"
 
 [node name="Quit" type="Button" parent="MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer/ButtonMargin/ButtonContainer"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 mouse_filter = 1
-text = "BUTTON_QUIT"
+text = "Quit"
 
 [node name="BottomSpacer" type="Control" parent="MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer"]
 layout_mode = 2
@@ -118,14 +118,14 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 metadata/_tab_index = 0
-metadata/_tab_name = "TAB_GRAPHICS"
+metadata/_tab_name = "Graphics"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics"]
 layout_mode = 2
 
 [node name="ResolutionLabel" type="Label" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
 layout_mode = 2
-text = "LABEL_RESOLUTION"
+text = "Resolution"
 horizontal_alignment = 1
 
 [node name="ResolutionDropdown" type="OptionButton" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
@@ -138,7 +138,7 @@ layout_mode = 2
 
 [node name="Fullscreen" type="CheckButton" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
 layout_mode = 2
-text = "BUTTON_FULLSCREEN"
+text = "Fullscreen"
 
 [node name="Spacer2" type="Control" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
@@ -146,7 +146,7 @@ layout_mode = 2
 
 [node name="FontSizeLabel" type="Label" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
 layout_mode = 2
-text = "LABEL_FONT_SIZE"
+text = "Font Size"
 horizontal_alignment = 1
 
 [node name="FontSizeContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
@@ -174,7 +174,7 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 metadata/_tab_index = 1
-metadata/_tab_name = "TAB_LANGUAGE"
+metadata/_tab_name = "Language"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Language"]
 layout_mode = 2
@@ -193,7 +193,7 @@ layout_mode = 2
 [node name="BackButton" type="Button" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/BackButtonMargin"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-text = "BUTTON_BACK_TO_MENU"
+text = "Back to Menu"
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer/ButtonMargin/ButtonContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer/ButtonMargin/ButtonContainer/Options" to="." method="_on_options_pressed"]

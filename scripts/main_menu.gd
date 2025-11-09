@@ -46,17 +46,17 @@ func _register_tooltips():
 	# Dynamic tooltip with current time for demonstration
 	TooltipManager.register_tooltip(
 		$MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer/ButtonMargin/ButtonContainer/Start,
-		func(): return tr("BUTTON_START_GAME_TOOLTIP") + "\n" + TimeUtils.format_current_time()
+		func(): return tr("Start the game") + "\n" + TimeUtils.format_current_time()
 	)
 
 	TooltipManager.register_tooltip(
 		$MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer/ButtonMargin/ButtonContainer/Options,
-		func(): return tr("BUTTON_OPTIONS_TOOLTIP")
+		func(): return tr("Change the options")
 	)
 
 	TooltipManager.register_tooltip(
 		$MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer/ButtonMargin/ButtonContainer/Quit,
-		func(): return tr("BUTTON_QUIT_TOOLTIP")
+		func(): return tr("Exit the game")
 	)
 
 func _on_quit_pressed():
@@ -82,11 +82,11 @@ func _populate_resolution_dropdown():
 
 	# Available resolutions (width, height, translation_key)
 	var resolutions = [
-		[1920, 1080, "RESOLUTION_1920X1080"],
-		[1600, 900, "RESOLUTION_1600X900"],
-		[1366, 768, "RESOLUTION_1366X768"],
-		[1280, 720, "RESOLUTION_1280X720"],
-		[1024, 768, "RESOLUTION_1024X768"]
+		[1920, 1080, "1920 x 1080 (Full HD)"],
+		[1600, 900, "1600 x 900 (HD+)"],
+		[1366, 768, "1366 x 768"],
+		[1280, 720, "1280 x 720 (HD)"],
+		[1024, 768, "1024 x 768"]
 	]
 
 	# Get current resolution
@@ -117,7 +117,7 @@ func _on_resolution_dropdown_selected(index: int):
 
 	# Get the selected resolution
 	var selected_res = resolutions[index]
-	print(tr("MESSAGE_RESOLUTION_CHANGED") % [selected_res.x, selected_res.y])
+	print(tr("Changing resolution to %dx%d") % [selected_res.x, selected_res.y])
 
 	# If in fullscreen mode, switch to windowed first
 	if ConfigManager.config.fullscreen:
@@ -130,7 +130,7 @@ func _on_resolution_dropdown_selected(index: int):
 func _on_fullscreen_toggled(toggled_on: bool):
 	# Toggle fullscreen mode and save to config
 	ConfigManager.set_fullscreen(toggled_on)
-	var message_key = "MESSAGE_FULLSCREEN_ENABLED" if toggled_on else "MESSAGE_FULLSCREEN_DISABLED"
+	var message_key = "Fullscreen enabled" if toggled_on else "Fullscreen disabled"
 	print(tr(message_key))
 
 func _populate_language_dropdown():
@@ -167,8 +167,8 @@ func _populate_language_dropdown():
 
 func _update_tab_titles():
 	# Update TabContainer tab titles with translated text
-	tab_container.set_tab_title(0, tr("TAB_GRAPHICS"))
-	tab_container.set_tab_title(1, tr("TAB_LANGUAGE"))
+	tab_container.set_tab_title(0, tr("Graphics"))
+	tab_container.set_tab_title(1, tr("Language"))
 
 func _on_language_changed(_data: Dictionary):
 	# Repopulate dropdown to update translated language names

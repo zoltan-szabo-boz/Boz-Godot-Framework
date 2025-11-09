@@ -14,7 +14,10 @@
       "Bash(if [ -f \"D:\\Godot\\boz-godot-framework\\scripts\\setup_base_theme.gd.uid\" ])",
       "Bash(then mv \"D:\\Godot\\boz-godot-framework\\scripts\\setup_base_theme.gd.uid\" \"D:\\Godot\\boz-godot-framework\\scripts\\editor_tools\\setup_base_theme.gd.uid\")",
       "Bash(else echo \"No .uid file found\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "WebFetch(domain:phrase.com)",
+      "WebFetch(domain:hosted.weblate.org)",
+      "WebFetch(domain:forum.godotengine.org)"
     ],
     "deny": [],
     "ask": []

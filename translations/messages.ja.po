@@ -1,0 +1,125 @@
+# Japanese translations for Boz Godot Framework
+# Copyright (C) 2025
+# This file is distributed under the same license as the Boz Godot Framework package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Boz Godot Framework\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-09 12:00+0000\n"
+"PO-Revision-Date: 2025-11-09 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: Main game title
+msgid "Learn Godot!"
+msgstr "Godotを学ぼう！"
+
+#: Button to start the game
+msgid "Start Game"
+msgstr "ゲーム開始"
+
+#: Button to open options menu
+msgid "Options"
+msgstr "オプション"
+
+#: Button to exit the game
+msgid "Quit"
+msgstr "終了"
+
+#: Tooltip for start game button
+msgid "Start the game"
+msgstr "ゲームを開始する"
+
+#: Tooltip for options button
+msgid "Change the options"
+msgstr "オプションを変更する"
+
+#: Tooltip for quit button
+msgid "Exit the game"
+msgstr "ゲームを終了する"
+
+#: Tab title for graphics settings
+msgid "Graphics"
+msgstr "グラフィック"
+
+#: Tab title for language settings
+msgid "Language"
+msgstr "言語"
+
+#: Label for resolution dropdown
+msgid "Resolution"
+msgstr "解像度"
+
+#: Label for font size setting
+msgid "Font Size"
+msgstr "フォントサイズ"
+
+#: Resolution option
+msgid "1920 x 1080 (Full HD)"
+msgstr "1920 x 1080 (フルHD)"
+
+#: Resolution option
+msgid "1280 x 720 (HD)"
+msgstr "1280 x 720 (HD)"
+
+#: Resolution option
+msgid "1600 x 900 (HD+)"
+msgstr "1600 x 900 (HD+)"
+
+#: Resolution option
+msgid "1366 x 768"
+msgstr "1366 x 768"
+
+#: Resolution option
+msgid "1024 x 768"
+msgstr "1024 x 768"
+
+#: Button to toggle fullscreen mode
+msgid "Fullscreen"
+msgstr "フルスクリーン"
+
+#: Button to return to menu (short form)
+msgid "Back to Menu"
+msgstr "メニューに戻る"
+
+#: Button to return to main menu (full form)
+msgid "Back to main menu"
+msgstr "メインメニューに戻る"
+
+#: Status message when changing resolution. %d placeholders for width and height
+msgid "Changing resolution to %dx%d"
+msgstr "解像度を%dx%dに変更中"
+
+#: Status message when fullscreen is turned on
+msgid "Fullscreen enabled"
+msgstr "フルスクリーン有効"
+
+#: Status message when fullscreen is turned off
+msgid "Fullscreen disabled"
+msgstr "フルスクリーン無効"
+
+#: Message shown when starting the game
+msgid "Starting the game!"
+msgstr "ゲーム開始！"
+
+#: Language name - English
+msgid "English"
+msgstr "英語"
+
+#: Language name - German
+msgid "German"
+msgstr "ドイツ語"
+
+#: Language name - Hungarian
+msgid "Hungarian"
+msgstr "ハンガリー語"
+
+#: Language name - Japanese
+msgid "Japanese"
+msgstr "日本語"

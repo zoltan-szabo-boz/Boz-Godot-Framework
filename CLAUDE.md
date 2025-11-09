@@ -186,20 +186,55 @@ var semi_transparent := ThemeColors.with_alpha(ThemeColors.BG_DARK, 0.5)
 
 ## Localization System
 
-The project uses Godot's built-in localization with CSV translation files:
+The project uses Godot's built-in localization with **gettext PO files** (industry-standard format):
+
+### File Structure
+
+- `translations/messages.pot` - Template file with source strings (English)
+- `translations/messages.en.po` - English translations
+- `translations/messages.de.po` - German translations (Deutsch)
+- `translations/messages.hu.po` - Hungarian translations (Magyar)
+- `translations/messages.ja.po` - Japanese translations (日本語)
 
 ### Adding Translatable Text
 
-1. **In scenes (.tscn)**: Set text properties to UPPERCASE keys (e.g., `text = "BUTTON_START_GAME"`)
-2. **In scripts (.gd)**: Use `tr("KEY")` function for dynamic text (e.g., `print(tr("MESSAGE_STARTING_GAME"))`)
-3. **Add keys to CSV**: Update `translations/translations.csv` with key and translations
+1. **In scenes (.tscn)**: Set text properties to natural English strings (e.g., `text = "Start Game"`)
+2. **In scripts (.gd)**: Use `tr("natural string")` function for dynamic text (e.g., `print(tr("Starting the game!"))`)
+3. **Add to PO files**: Update all language-specific .po files with translations for the new string
 
-### Translation Keys Convention
+### Translation Workflow
 
-- Use UPPERCASE for all keys (e.g., `GAME_TITLE`, `BUTTON_OPTIONS`)
-- Prefix categories: `BUTTON_*`, `LABEL_*`, `MESSAGE_*`, `TOOLTIP_*`, `LANGUAGE_*`
-- Scene elements auto-translate on language change
-- Use string formatting with tr() for dynamic values: `tr("MESSAGE_RESOLUTION_CHANGED") % [width, height]`
+**Using Natural Source Strings:**
+- English text is used as the msgid (source) in PO files
+- Translators translate from English to their language
+- In English, `tr("Start Game")` returns "Start Game"
+- In German, `tr("Start Game")` returns "Spiel starten"
+
+**Editing PO Files:**
+- Use professional tools: Poedit, Weblate, Crowdin, Lokalise
+- Or edit manually with any text editor
+- PO format includes comments for translator context
+- Supports plural forms and string formatting
+
+**String Formatting:**
+- Use printf-style formatting: `tr("Changing resolution to %dx%d") % [1920, 1080]`
+- Result: "Changing resolution to 1920x1080"
+
+**Key Features of Gettext:**
+- Context support via `msgctxt` for disambiguating identical strings
+- Translator comments via `#.` for providing context
+- Fuzzy matching when source strings change
+- Compatible with all major localization platforms
+
+### Localization Platform Integration
+
+The framework supports integration with professional localization platforms for large-scale projects:
+- **Weblate** - Free/open-source, self-hosted or cloud
+- **Crowdin** - Professional CAT tool with free tier
+- **Lokalise** - Team collaboration platform
+- **Phrase** - Enterprise localization platform
+
+See `docs/localization_platform_integration.md` for setup guides and workflows.
 
 ## Testing Framework
 

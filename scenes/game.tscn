@@ -17,6 +17,6 @@ offset_left = 275.0
 offset_top = 221.0
 offset_right = 433.0
 offset_bottom = 252.0
-text = "BUTTON_BACK_TO_MAIN_MENU"
+text = "Back to main menu"
 
 [connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]

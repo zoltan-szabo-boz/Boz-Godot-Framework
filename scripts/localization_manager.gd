@@ -33,10 +33,10 @@ const CONFIG_FILE = "user://config.cfg"
 # name: Native language name (shown in dropdown)
 # translation_key: Key used to get translated name in other languages
 var available_languages = [
-	{"code": "en", "name": "English", "translation_key": "LANGUAGE_ENGLISH"},
-	{"code": "de", "name": "Deutsch", "translation_key": "LANGUAGE_GERMAN"},
-	{"code": "hu", "name": "Magyar", "translation_key": "LANGUAGE_HUNGARIAN"},
-	{"code": "ja", "name": "日本語", "translation_key": "LANGUAGE_JAPANESE"}
+	{"code": "en", "name": "English", "translation_key": "English"},
+	{"code": "de", "name": "Deutsch", "translation_key": "German"},
+	{"code": "hu", "name": "Magyar", "translation_key": "Hungarian"},
+	{"code": "ja", "name": "日本語", "translation_key": "Japanese"}
 ]
 
 var current_language: String = "en"

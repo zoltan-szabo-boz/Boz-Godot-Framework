@@ -1,0 +1,125 @@
+# Hungarian translations for Boz Godot Framework
+# Copyright (C) 2025
+# This file is distributed under the same license as the Boz Godot Framework package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Boz Godot Framework\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-09 12:00+0000\n"
+"PO-Revision-Date: 2025-11-09 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Hungarian\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: Main game title
+msgid "Learn Godot!"
+msgstr "Tanuld meg a Godót!"
+
+#: Button to start the game
+msgid "Start Game"
+msgstr "Játék indítása"
+
+#: Button to open options menu
+msgid "Options"
+msgstr "Beállítások"
+
+#: Button to exit the game
+msgid "Quit"
+msgstr "Kilépés"
+
+#: Tooltip for start game button
+msgid "Start the game"
+msgstr "Játék indítása"
+
+#: Tooltip for options button
+msgid "Change the options"
+msgstr "Beállítások módosítása"
+
+#: Tooltip for quit button
+msgid "Exit the game"
+msgstr "Kilépés a játékból"
+
+#: Tab title for graphics settings
+msgid "Graphics"
+msgstr "Grafika"
+
+#: Tab title for language settings
+msgid "Language"
+msgstr "Nyelv"
+
+#: Label for resolution dropdown
+msgid "Resolution"
+msgstr "Felbontás"
+
+#: Label for font size setting
+msgid "Font Size"
+msgstr "Betűméret"
+
+#: Resolution option
+msgid "1920 x 1080 (Full HD)"
+msgstr "1920 x 1080 (Full HD)"
+
+#: Resolution option
+msgid "1280 x 720 (HD)"
+msgstr "1280 x 720 (HD)"
+
+#: Resolution option
+msgid "1600 x 900 (HD+)"
+msgstr "1600 x 900 (HD+)"
+
+#: Resolution option
+msgid "1366 x 768"
+msgstr "1366 x 768"
+
+#: Resolution option
+msgid "1024 x 768"
+msgstr "1024 x 768"
+
+#: Button to toggle fullscreen mode
+msgid "Fullscreen"
+msgstr "Teljes képernyő"
+
+#: Button to return to menu (short form)
+msgid "Back to Menu"
+msgstr "Vissza a menübe"
+
+#: Button to return to main menu (full form)
+msgid "Back to main menu"
+msgstr "Vissza a főmenübe"
+
+#: Status message when changing resolution. %d placeholders for width and height
+msgid "Changing resolution to %dx%d"
+msgstr "Felbontás váltása: %dx%d"
+
+#: Status message when fullscreen is turned on
+msgid "Fullscreen enabled"
+msgstr "Teljes képernyő bekapcsolva"
+
+#: Status message when fullscreen is turned off
+msgid "Fullscreen disabled"
+msgstr "Teljes képernyő kikapcsolva"
+
+#: Message shown when starting the game
+msgid "Starting the game!"
+msgstr "Játék indítása!"
+
+#: Language name - English
+msgid "English"
+msgstr "Angol"
+
+#: Language name - German
+msgid "German"
+msgstr "Német"
+
+#: Language name - Hungarian
+msgid "Hungarian"
+msgstr "Magyar"
+
+#: Language name - Japanese
+msgid "Japanese"
+msgstr "Japán"

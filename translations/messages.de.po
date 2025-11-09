@@ -1,0 +1,125 @@
+# German translations for Boz Godot Framework
+# Copyright (C) 2025
+# This file is distributed under the same license as the Boz Godot Framework package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Boz Godot Framework\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-09 12:00+0000\n"
+"PO-Revision-Date: 2025-11-09 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: Main game title
+msgid "Learn Godot!"
+msgstr "Lerne Godot!"
+
+#: Button to start the game
+msgid "Start Game"
+msgstr "Spiel starten"
+
+#: Button to open options menu
+msgid "Options"
+msgstr "Optionen"
+
+#: Button to exit the game
+msgid "Quit"
+msgstr "Beenden"
+
+#: Tooltip for start game button
+msgid "Start the game"
+msgstr "Spiel starten"
+
+#: Tooltip for options button
+msgid "Change the options"
+msgstr "Optionen ändern"
+
+#: Tooltip for quit button
+msgid "Exit the game"
+msgstr "Spiel beenden"
+
+#: Tab title for graphics settings
+msgid "Graphics"
+msgstr "Grafik"
+
+#: Tab title for language settings
+msgid "Language"
+msgstr "Sprache"
+
+#: Label for resolution dropdown
+msgid "Resolution"
+msgstr "Auflösung"
+
+#: Label for font size setting
+msgid "Font Size"
+msgstr "Schriftgröße"
+
+#: Resolution option
+msgid "1920 x 1080 (Full HD)"
+msgstr "1920 x 1080 (Full HD)"
+
+#: Resolution option
+msgid "1280 x 720 (HD)"
+msgstr "1280 x 720 (HD)"
+
+#: Resolution option
+msgid "1600 x 900 (HD+)"
+msgstr "1600 x 900 (HD+)"
+
+#: Resolution option
+msgid "1366 x 768"
+msgstr "1366 x 768"
+
+#: Resolution option
+msgid "1024 x 768"
+msgstr "1024 x 768"
+
+#: Button to toggle fullscreen mode
+msgid "Fullscreen"
+msgstr "Vollbild"
+
+#: Button to return to menu (short form)
+msgid "Back to Menu"
+msgstr "Zurück zum Menü"
+
+#: Button to return to main menu (full form)
+msgid "Back to main menu"
+msgstr "Zurück zum Hauptmenü"
+
+#: Status message when changing resolution. %d placeholders for width and height
+msgid "Changing resolution to %dx%d"
+msgstr "Auflösung ändern auf %dx%d"
+
+#: Status message when fullscreen is turned on
+msgid "Fullscreen enabled"
+msgstr "Vollbild aktiviert"
+
+#: Status message when fullscreen is turned off
+msgid "Fullscreen disabled"
+msgstr "Vollbild deaktiviert"
+
+#: Message shown when starting the game
+msgid "Starting the game!"
+msgstr "Spiel wird gestartet!"
+
+#: Language name - English
+msgid "English"
+msgstr "Englisch"
+
+#: Language name - German
+msgid "German"
+msgstr "Deutsch"
+
+#: Language name - Hungarian
+msgid "Hungarian"
+msgstr "Ungarisch"
+
+#: Language name - Japanese
+msgid "Japanese"
+msgstr "Japanisch"

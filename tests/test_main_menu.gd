@@ -76,8 +76,8 @@ func test_main_menu_has_title():
 
 	assert_not_null(title_label, "Title label should exist")
 	if title_label:
-		# Title now uses translation key
-		assert_eq(title_label.text, "GAME_TITLE", "Title should use translation key 'GAME_TITLE'")
+		# Title now uses natural source string
+		assert_eq(title_label.text, "Learn Godot!", "Title should use natural source string 'Learn Godot!'")
 
 # Test: Quit button calls quit method
 func test_quit_button_functionality():
@@ -178,9 +178,9 @@ func test_language_change_updates_ui():
 		# Set to English and wait for update
 		LocalizationManager.set_language("en")
 		await get_tree().process_frame
-		# In Godot, labels with translation keys automatically update
-		# We verify the translation key is set (actual translation happens in engine)
-		assert_eq(title_label.text, "GAME_TITLE", "Label should use translation key")
+		# In Godot, labels with natural source strings automatically translate
+		# We verify the natural source string is set (actual translation happens in engine)
+		assert_eq(title_label.text, "Learn Godot!", "Label should use natural source string")
 
 # Test: TabContainer tab titles update on language change
 func test_tab_titles_update_on_language_change():
