@@ -19,7 +19,7 @@ extends RefCounted
 # ============================================================================
 
 ## High contrast primary color - bright blue for maximum visibility
-const PRIMARY: Color = Color(0.0, 0.7, 1.0, 1.0)  # Bright cyan-blue
+const PRIMARY: Color = Color(0.0, 0.7, 1.0, 1.0) # Bright cyan-blue
 
 ## Primary color on hover state - even brighter
 const PRIMARY_HOVER: Color = Color(0.2, 0.8, 1.0, 1.0)
@@ -120,7 +120,7 @@ const INFO_HOVER: Color = Color(0.4, 0.95, 1.0, 1.0)
 const BORDER: Color = Color(1.0, 1.0, 1.0, 1.0)
 
 ## Bright border on hover
-const BORDER_HOVER: Color = Color(1.0, 1.0, 1.0, 1.0)
+const BORDER_HOVER: Color = Color(1.0, 1.0, 1.0, 1.0) /
 
 ## Bright blue border on focus - clearly indicates focus state
 const BORDER_FOCUS: Color = Color(0.0, 0.7, 1.0, 1.0)

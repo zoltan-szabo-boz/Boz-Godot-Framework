@@ -151,12 +151,21 @@ func apply_resolution():
 		print("ConfigManager: Applied render resolution: %dx%d (with viewport scaling)" % [config.resolution.x, config.resolution.y])
 
 func apply_window_mode():
+	# First, set the window mode and flags
 	match config.window_mode:
 		WindowMode.WINDOWED:
 			# Traditional windowed mode with custom resolution
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			# Remove borderless flag FIRST
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
-			apply_resolution()
+
+			# Force a mode transition to refresh window decorations
+			# (needed when coming from borderless which is also WINDOW_MODE_WINDOWED)
+			# Temporarily switch to maximized then back to windowed to force refresh
+			var current_mode = DisplayServer.window_get_mode()
+			if current_mode == DisplayServer.WINDOW_MODE_WINDOWED:
+				# Already in windowed mode (from borderless), force refresh via mode toggle
+				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 			print("ConfigManager: Applied WINDOWED mode")
 
 		WindowMode.BORDERLESS:
@@ -167,17 +176,16 @@ func apply_window_mode():
 			var screen_size = DisplayServer.screen_get_size()
 			DisplayServer.window_set_size(screen_size)
 			DisplayServer.window_set_position(Vector2i(0, 0))
-			# Apply render resolution (game renders at config.resolution, scales to screen_size)
-			apply_resolution()
-			print("ConfigManager: Applied BORDERLESS mode - display: %dx%d, render: %dx%d" % [screen_size.x, screen_size.y, config.resolution.x, config.resolution.y])
+			print("ConfigManager: Applied BORDERLESS mode - display: %dx%d" % [screen_size.x, screen_size.y])
 
 		WindowMode.FULLSCREEN:
 			# Exclusive fullscreen mode - render at configured resolution
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-			# Apply render resolution
-			apply_resolution()
-			print("ConfigManager: Applied FULLSCREEN mode - render: %dx%d" % [config.resolution.x, config.resolution.y])
+			print("ConfigManager: Applied FULLSCREEN mode")
+
+	# Always apply resolution after window mode changes to ensure proper scaling/sizing
+	apply_resolution()
 
 func apply_ui_scale():
 	# Apply UI scaling using Godot's built-in content scale factor
