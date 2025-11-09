@@ -136,9 +136,14 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="Fullscreen" type="CheckButton" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
+[node name="WindowModeLabel" type="Label" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
 layout_mode = 2
-text = "Fullscreen"
+text = "Window Mode"
+horizontal_alignment = 1
+
+[node name="WindowModeDropdown" type="OptionButton" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
 
 [node name="Spacer2" type="Control" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
@@ -146,7 +151,7 @@ layout_mode = 2
 
 [node name="FontSizeLabel" type="Label" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
 layout_mode = 2
-text = "Font Size"
+text = "UI Scale"
 horizontal_alignment = 1
 
 [node name="FontSizeContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer"]
@@ -155,8 +160,8 @@ layout_mode = 2
 [node name="FontSizeSlider" type="HSlider" parent="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-min_value = 0.7
-max_value = 1.4
+min_value = 0.8
+max_value = 1.5
 step = 0.1
 value = 1.0
 
@@ -199,7 +204,7 @@ text = "Back to Menu"
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer/ButtonMargin/ButtonContainer/Options" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/MainMenuPanel/VBoxContainer/ButtonMargin/ButtonContainer/Quit" to="." method="_on_quit_pressed"]
 [connection signal="item_selected" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/ResolutionDropdown" to="." method="_on_resolution_dropdown_selected"]
-[connection signal="toggled" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/Fullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="item_selected" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/WindowModeDropdown" to="." method="_on_window_mode_selected"]
 [connection signal="value_changed" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeSlider" to="." method="_on_font_size_slider_value_changed"]
 [connection signal="item_selected" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Language/VBoxContainer/LanguageDropdown" to="." method="_on_language_dropdown_selected"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/BackButtonMargin/BackButton" to="." method="_on_back_to_menu_pressed"]

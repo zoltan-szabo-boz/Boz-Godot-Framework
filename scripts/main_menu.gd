@@ -3,22 +3,26 @@ extends Control
 @onready var main_menu_panel = $MarginContainer/HBoxContainer/MainMenuPanel
 @onready var options_panel = $MarginContainer/HBoxContainer/OptionsPanel
 @onready var tab_container = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer
+@onready var resolution_label = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/ResolutionLabel
 @onready var resolution_dropdown = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/ResolutionDropdown
-@onready var fullscreen_check = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/Fullscreen
+@onready var window_mode_dropdown = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/WindowModeDropdown
 @onready var font_size_slider = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeSlider
 @onready var font_size_value = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeValue
 @onready var language_dropdown = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Language/VBoxContainer/LanguageDropdown
 
 func _ready():
-	# Initialize fullscreen checkbox state from config
-	fullscreen_check.button_pressed = ConfigManager.config.fullscreen
+	# Initialize window mode dropdown
+	_populate_window_mode_dropdown()
 
-	# Initialize font size slider from config
-	font_size_slider.value = ConfigManager.config.font_scale
-	_update_font_size_label(ConfigManager.config.font_scale)
+	# Initialize UI scale slider from config
+	font_size_slider.value = ConfigManager.config.ui_scale
+	_update_ui_scale_label(ConfigManager.config.ui_scale)
 
 	# Populate resolution dropdown
 	_populate_resolution_dropdown()
+
+	# Update resolution visibility based on window mode
+	_update_resolution_visibility()
 
 	# Populate language dropdown
 	_populate_language_dropdown()
@@ -29,18 +33,18 @@ func _ready():
 	# Subscribe to language change events via EventBus
 	EventBus.subscribe("language_changed", _on_language_changed)
 
-	# Subscribe to font scale change events
-	EventBus.subscribe("font_scale_changed", _on_font_scale_changed)
+	# Subscribe to UI scale change events
+	EventBus.subscribe("ui_scale_changed", _on_ui_scale_changed)
 
-	# Apply initial font scale (ConfigManager also does this, but we ensure it's current)
-	ConfigManager.apply_font_scale()
+	# Apply initial UI scale (ConfigManager already does this in _ready())
+	ConfigManager.apply_ui_scale()
 
 	_register_tooltips()
 
 func _exit_tree():
 	# Unsubscribe from EventBus when leaving tree
 	EventBus.unsubscribe("language_changed", _on_language_changed)
-	EventBus.unsubscribe("font_scale_changed", _on_font_scale_changed)
+	EventBus.unsubscribe("ui_scale_changed", _on_ui_scale_changed)
 
 func _register_tooltips():
 	# Dynamic tooltip with current time for demonstration
@@ -119,19 +123,36 @@ func _on_resolution_dropdown_selected(index: int):
 	var selected_res = resolutions[index]
 	print(tr("Changing resolution to %dx%d") % [selected_res.x, selected_res.y])
 
-	# If in fullscreen mode, switch to windowed first
-	if ConfigManager.config.fullscreen:
-		ConfigManager.set_fullscreen(false)
-		fullscreen_check.button_pressed = false
-
-	# Set the window size through ConfigManager
+	# Set the window size through ConfigManager (only applies in windowed mode)
 	ConfigManager.set_resolution(selected_res)
 
-func _on_fullscreen_toggled(toggled_on: bool):
-	# Toggle fullscreen mode and save to config
-	ConfigManager.set_fullscreen(toggled_on)
-	var message_key = "Fullscreen enabled" if toggled_on else "Fullscreen disabled"
-	print(tr(message_key))
+func _populate_window_mode_dropdown():
+	# Clear existing items
+	window_mode_dropdown.clear()
+
+	# Add window mode options
+	window_mode_dropdown.add_item(tr("Windowed"), ConfigManager.WindowMode.WINDOWED)
+	window_mode_dropdown.add_item(tr("Borderless Fullscreen"), ConfigManager.WindowMode.BORDERLESS)
+	window_mode_dropdown.add_item(tr("Fullscreen"), ConfigManager.WindowMode.FULLSCREEN)
+
+	# Select current window mode
+	window_mode_dropdown.select(ConfigManager.config.window_mode)
+
+func _on_window_mode_selected(index: int):
+	# Get the selected window mode (index maps to enum values)
+	var selected_mode = window_mode_dropdown.get_item_id(index)
+
+	# Set the window mode through ConfigManager
+	ConfigManager.set_window_mode(selected_mode)
+
+	# Update resolution visibility
+	_update_resolution_visibility()
+
+func _update_resolution_visibility():
+	# Resolution controls only visible in windowed mode
+	var is_visible = ConfigManager.is_resolution_applicable()
+	resolution_label.visible = is_visible
+	resolution_dropdown.visible = is_visible
 
 func _populate_language_dropdown():
 	# Clear existing items
@@ -189,17 +210,17 @@ func _on_language_dropdown_selected(index: int):
 
 func _on_font_size_slider_value_changed(value: float):
 	# Update the label to show current value
-	_update_font_size_label(value)
+	_update_ui_scale_label(value)
 
 	# Save to config and trigger EventBus notification
-	ConfigManager.set_font_scale(value)
+	ConfigManager.set_ui_scale(value)
 
-func _update_font_size_label(value: float):
+func _update_ui_scale_label(value: float):
 	# Format value to 1 decimal place
 	font_size_value.text = "%.1f" % value
 
-func _on_font_scale_changed(_data: Dictionary):
-	# Font scale is now applied automatically by ConfigManager
+func _on_ui_scale_changed(_data: Dictionary):
+	# UI scale is now applied automatically by ConfigManager
 	# This callback is kept for potential future UI updates
 	# _data contains: {"scale": float}
 	pass

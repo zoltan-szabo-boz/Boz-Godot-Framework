@@ -32,12 +32,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `fonts/` - Font resources (header, body, ui)
   - `base_theme.tres` - Main comprehensive theme (to be created)
   - `main_menu.tres` - Legacy theme (being phased out)
-- `translations/` - Localization files
-  - `translations.csv` - Translation keys for all UI text (en, hu)
+- `translations/` - Localization files (GNU gettext PO format)
+  - `messages.pot` - Translation template file
+  - `messages.{en,de,hu,ja}.po` - Language-specific translation files
 - `tests/` - Automated test files using GUT framework
 - `docs/` - Documentation files
   - `theme_system.md` - Comprehensive theme system documentation
   - `event_architecture.md` - Event system architecture guide
+  - `localization_platform_integration.md` - Guide for translation platforms (Weblate, Crowdin, etc.)
+  - `code_formatting.md` - Code formatting guidelines and VSCode setup
 - `Dockerfile` - Docker image definition for headless testing
 - `docker-compose.yml` - Docker services: test, validate, shell
 
@@ -65,10 +68,18 @@ Filesystem abstraction layer designed for console compatibility:
 
 Manages game settings and persists them via FileManager:
 
-- Resolution settings (1920x1080, 1280x720, 1600x900, 1366x768, 1024x768)
-- Fullscreen mode toggle
+- **Window Modes**: Three display modes for PC gaming
+  - `WINDOWED` - Traditional windowed mode with custom resolution control
+  - `BORDERLESS` - Borderless fullscreen at native resolution (default, recommended for PC gaming)
+  - `FULLSCREEN` - Exclusive fullscreen mode
+- **Resolution Settings**: 1920x1080, 1600x900, 1366x768, 1280x720, 1024x768 (applies only in windowed mode)
+- **UI Scale**: Scales entire interface proportionally (0.8x to 1.5x range for accessibility)
+  - Uses `content_scale_factor` to scale viewport/UI tree
+  - Affects text, buttons, icons, spacing - everything scales together
+- **Backward Compatibility**: Automatically converts old config formats (fullscreen bool → window_mode enum, font_scale → ui_scale)
 - Settings stored in `user://config.cfg`
 - Auto-loads and applies settings on startup
+- Emits `ui_scale_changed` event via EventBus when UI scale changes
 - Singleton accessible via `ConfigManager` global
 
 ### LocalizationManager (scripts/localization_manager.gd)
@@ -78,7 +89,11 @@ Handles multi-language support using Godot's TranslationServer:
 - Supports English (en), German (de), Hungarian (hu), and Japanese (ja)
 - Auto-detects system language on first run
 - Persists language preference via FileManager
-- Uses CSV translation files (translations/translations.csv)
+- Uses GNU gettext PO format for professional translation workflows
+  - Compatible with translation platforms (Weblate, Crowdin, Lokalise, Phrase)
+  - Supports CAT tools and translator comments
+  - Template file: `messages.pot`, language files: `messages.{en,de,hu,ja}.po`
+- Natural source strings (e.g., "Start Game") instead of UPPERCASE_KEYS
 - Emits `language_changed` event via EventBus for cross-system updates
 - Subscribe with: `EventBus.subscribe("language_changed", callback)`
 - Singleton accessible via `LocalizationManager` global

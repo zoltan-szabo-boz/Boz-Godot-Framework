@@ -57,8 +57,24 @@ msgstr ""
 msgid "Resolution"
 msgstr ""
 
-#: Label for font size setting
-msgid "Font Size"
+#: Label for UI scale setting - scales the entire interface proportionally
+msgid "UI Scale"
+msgstr ""
+
+#: Label for window mode dropdown
+msgid "Window Mode"
+msgstr ""
+
+#: Window mode option - traditional windowed mode with custom resolution
+msgid "Windowed"
+msgstr ""
+
+#: Window mode option - borderless fullscreen at native resolution (recommended)
+msgid "Borderless Fullscreen"
+msgstr ""
+
+#: Window mode option - exclusive fullscreen mode
+msgid "Fullscreen"
 msgstr ""
 
 #: Resolution option
@@ -79,10 +95,6 @@ msgstr ""
 
 #: Resolution option
 msgid "1024 x 768"
-msgstr ""
-
-#: Button to toggle fullscreen mode
-msgid "Fullscreen"
 msgstr ""
 
 #: Button to return to menu (short form)

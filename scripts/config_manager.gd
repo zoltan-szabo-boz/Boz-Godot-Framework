@@ -2,10 +2,17 @@ extends Node
 
 const CONFIG_FILE = "user://config.cfg"
 
+# Window mode enum
+enum WindowMode {
+	WINDOWED = 0,        # Traditional windowed mode with resolution control
+	BORDERLESS = 1,      # Borderless fullscreen (recommended for PC gaming)
+	FULLSCREEN = 2       # Exclusive fullscreen mode
+}
+
 var config = {
 	"resolution": Vector2i(1152, 648),
-	"fullscreen": false,
-	"font_scale": 1.0
+	"window_mode": WindowMode.BORDERLESS,  # Default to borderless (modern PC standard)
+	"ui_scale": 1.0
 }
 
 var available_resolutions = [
@@ -18,10 +25,9 @@ var available_resolutions = [
 
 func _ready():
 	load_config()
-	apply_fullscreen()
-	# Apply font scale after a frame to ensure scene tree is ready
-	await get_tree().process_frame
-	apply_font_scale()
+	apply_window_mode()
+	# Apply UI scale immediately
+	apply_ui_scale()
 
 func _notification(what):
 	# Ensure config is saved on exit
@@ -35,8 +41,8 @@ func save_config(flush_immediately: bool = true):
 		"display": {
 			"resolution_x": config.resolution.x,
 			"resolution_y": config.resolution.y,
-			"fullscreen": config.fullscreen,
-			"font_scale": config.font_scale
+			"window_mode": config.window_mode,
+			"ui_scale": config.ui_scale
 		}
 	}
 
@@ -62,73 +68,85 @@ func load_config():
 		var res_x = display.get("resolution_x", config.resolution.x)
 		var res_y = display.get("resolution_y", config.resolution.y)
 		config.resolution = Vector2i(res_x, res_y)
-		config.fullscreen = display.get("fullscreen", config.fullscreen)
-		config.font_scale = display.get("font_scale", config.font_scale)
+
+		# Load window_mode with backward compatibility for old fullscreen bool
+		if display.has("window_mode"):
+			config.window_mode = display.get("window_mode", config.window_mode)
+		elif display.has("fullscreen"):
+			# Convert old fullscreen bool to window_mode enum
+			config.window_mode = WindowMode.FULLSCREEN if display.get("fullscreen") else WindowMode.WINDOWED
+
+		# Support loading old font_scale config and converting to ui_scale
+		config.ui_scale = display.get("ui_scale", display.get("font_scale", config.ui_scale))
 
 func set_resolution(resolution: Vector2i):
 	config.resolution = resolution
 	apply_resolution()
 	save_config()
 
-func set_fullscreen(enabled: bool):
-	config.fullscreen = enabled
-	apply_fullscreen()
+func set_window_mode(mode: WindowMode):
+	config.window_mode = mode
+	apply_window_mode()
 	save_config()
+	print("ConfigManager: Window mode changed to %d" % mode)
 
-func set_font_scale(scale: float):
-	# Clamp to reasonable limits (0.7 to 1.4)
-	config.font_scale = clampf(scale, 0.7, 1.4)
+func set_ui_scale(scale: float):
+	# Clamp to reasonable limits (0.8 to 1.5 for better accessibility)
+	config.ui_scale = clampf(scale, 0.8, 1.5)
 	# Don't flush immediately - let FileManager auto-flush periodically
 	# This prevents freezing when dragging the slider
 	save_config(false)
-	# Apply font scale immediately to all nodes
-	apply_font_scale()
+	# Apply UI scale immediately
+	apply_ui_scale()
 	# Emit event via EventBus for UI to react (for updating UI elements like the slider value)
-	EventBus.emit("font_scale_changed", {"scale": config.font_scale})
+	EventBus.emit("ui_scale_changed", {"scale": config.ui_scale})
 
 func apply_resolution():
-	if not config.fullscreen:
+	# Only apply resolution in windowed mode
+	if config.window_mode == WindowMode.WINDOWED:
 		DisplayServer.window_set_size(config.resolution)
 
 		var screen_size = DisplayServer.screen_get_size()
 		var window_pos = (screen_size - config.resolution) / 2
 		DisplayServer.window_set_position(window_pos)
 
-func apply_fullscreen():
-	if config.fullscreen:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-	else:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-		apply_resolution()
+func apply_window_mode():
+	match config.window_mode:
+		WindowMode.WINDOWED:
+			# Traditional windowed mode with custom resolution
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+			apply_resolution()
+			print("ConfigManager: Applied WINDOWED mode")
 
-func apply_font_scale():
-	# Apply font scaling to the entire scene tree
-	_apply_font_scale_to_tree(get_tree().root, config.font_scale)
+		WindowMode.BORDERLESS:
+			# Borderless fullscreen - uses native resolution, fast alt-tab
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
+			# Set to native screen size
+			var screen_size = DisplayServer.screen_get_size()
+			DisplayServer.window_set_size(screen_size)
+			DisplayServer.window_set_position(Vector2i(0, 0))
+			print("ConfigManager: Applied BORDERLESS mode at %dx%d" % [screen_size.x, screen_size.y])
 
-func _apply_font_scale_to_tree(node: Node, scale: float):
-	# Recursively apply font size override to all Control nodes
-	if node is Control:
-		# Store the original base font size as metadata if not already stored
-		if not node.has_meta("_base_font_size"):
-			# Get the current font size from theme or use default
-			var current_size = node.get_theme_font_size("font_size")
-			if current_size <= 0:
-				current_size = 16  # Default fallback size
-			node.set_meta("_base_font_size", current_size)
+		WindowMode.FULLSCREEN:
+			# Exclusive fullscreen mode
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+			print("ConfigManager: Applied FULLSCREEN mode")
 
-		# Get the base size and apply scale
-		var base_size = node.get_meta("_base_font_size")
-		var scaled_size = int(base_size * scale)
-
-		# Apply the scaled font size override
-		node.add_theme_font_size_override("font_size", scaled_size)
-
-	# Recursively process children
-	for child in node.get_children():
-		_apply_font_scale_to_tree(child, scale)
+func apply_ui_scale():
+	# Apply UI scaling using Godot's built-in content scale factor
+	# This scales the entire UI tree proportionally, including text, buttons, icons, and spacing
+	get_tree().root.content_scale_factor = config.ui_scale
+	print("ConfigManager: Applied UI scale: %.1fx" % config.ui_scale)
 
 func get_resolution_index() -> int:
 	for i in range(available_resolutions.size()):
 		if available_resolutions[i] == config.resolution:
 			return i
 	return 0
+
+func is_resolution_applicable() -> bool:
+	# Resolution selection only applies in windowed mode
+	return config.window_mode == WindowMode.WINDOWED

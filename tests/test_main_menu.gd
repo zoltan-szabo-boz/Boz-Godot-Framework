@@ -98,21 +98,74 @@ func test_options_panel_has_tabcontainer():
 	assert_not_null(graphics_tab, "Graphics tab should exist")
 	assert_not_null(language_tab, "Language tab should exist")
 
-# Test: Graphics tab has resolution dropdown, fullscreen checkbox, and font size slider
+# Test: Graphics tab has resolution dropdown, window mode dropdown, and font size slider
 func test_graphics_tab_has_controls():
 	var resolution_dropdown = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/ResolutionDropdown")
-	var fullscreen = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/Fullscreen")
+	var window_mode_dropdown = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/WindowModeDropdown")
 	var font_size_slider = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeSlider")
 
 	assert_not_null(resolution_dropdown, "Resolution dropdown should exist")
-	assert_not_null(fullscreen, "Fullscreen checkbox should exist")
-	assert_not_null(font_size_slider, "Font size slider should exist")
+	assert_not_null(window_mode_dropdown, "Window mode dropdown should exist")
+	assert_not_null(font_size_slider, "UI scale slider should exist")
 	if resolution_dropdown:
 		assert_eq(resolution_dropdown.item_count, 5, "Resolution dropdown should have 5 options")
+	if window_mode_dropdown:
+		assert_eq(window_mode_dropdown.item_count, 3, "Window mode dropdown should have 3 options")
 	if font_size_slider:
-		assert_eq(font_size_slider.min_value, 0.7, "Font size slider min should be 0.7")
-		assert_eq(font_size_slider.max_value, 1.4, "Font size slider max should be 1.4")
-		assert_eq(font_size_slider.value, 1.0, "Font size slider default should be 1.0")
+		assert_eq(font_size_slider.min_value, 0.8, "UI scale slider min should be 0.8")
+		assert_eq(font_size_slider.max_value, 1.5, "UI scale slider max should be 1.5")
+		assert_eq(font_size_slider.value, 1.0, "UI scale slider default should be 1.0")
+
+# Test: Window mode dropdown changes window mode
+func test_window_mode_dropdown_changes_mode():
+	var window_mode_dropdown = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/WindowModeDropdown")
+
+	if window_mode_dropdown:
+		# Set to Windowed (index 0)
+		window_mode_dropdown.select(0)
+		window_mode_dropdown.item_selected.emit(0)
+		await get_tree().process_frame
+		assert_eq(ConfigManager.config.window_mode, ConfigManager.WindowMode.WINDOWED, "Window mode should be WINDOWED")
+
+		# Set to Borderless (index 1)
+		window_mode_dropdown.select(1)
+		window_mode_dropdown.item_selected.emit(1)
+		await get_tree().process_frame
+		assert_eq(ConfigManager.config.window_mode, ConfigManager.WindowMode.BORDERLESS, "Window mode should be BORDERLESS")
+
+		# Set to Fullscreen (index 2)
+		window_mode_dropdown.select(2)
+		window_mode_dropdown.item_selected.emit(2)
+		await get_tree().process_frame
+		assert_eq(ConfigManager.config.window_mode, ConfigManager.WindowMode.FULLSCREEN, "Window mode should be FULLSCREEN")
+
+# Test: Resolution dropdown visibility based on window mode
+func test_resolution_visibility_based_on_window_mode():
+	var resolution_dropdown = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/ResolutionDropdown")
+	var resolution_label = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/ResolutionLabel")
+	var window_mode_dropdown = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/WindowModeDropdown")
+
+	if resolution_dropdown and resolution_label and window_mode_dropdown:
+		# Set to Windowed mode - resolution should be visible
+		window_mode_dropdown.select(0)
+		window_mode_dropdown.item_selected.emit(0)
+		await get_tree().process_frame
+		assert_true(resolution_dropdown.visible, "Resolution dropdown should be visible in windowed mode")
+		assert_true(resolution_label.visible, "Resolution label should be visible in windowed mode")
+
+		# Set to Borderless mode - resolution should be hidden
+		window_mode_dropdown.select(1)
+		window_mode_dropdown.item_selected.emit(1)
+		await get_tree().process_frame
+		assert_false(resolution_dropdown.visible, "Resolution dropdown should be hidden in borderless mode")
+		assert_false(resolution_label.visible, "Resolution label should be hidden in borderless mode")
+
+		# Set to Fullscreen mode - resolution should be hidden
+		window_mode_dropdown.select(2)
+		window_mode_dropdown.item_selected.emit(2)
+		await get_tree().process_frame
+		assert_false(resolution_dropdown.visible, "Resolution dropdown should be hidden in fullscreen mode")
+		assert_false(resolution_label.visible, "Resolution label should be hidden in fullscreen mode")
 
 # Test: Back button returns to main menu
 func test_back_button_returns_to_menu():
@@ -205,17 +258,17 @@ func test_font_size_slider_changes_scale():
 		font_size_slider.value = 1.2
 		font_size_slider.value_changed.emit(1.2)
 		await get_tree().process_frame
-		assert_eq(ConfigManager.config.font_scale, 1.2, "Font scale should be saved to config")
-		assert_eq(font_size_value.text, "1.2", "Font size value label should display 1.2")
+		assert_eq(ConfigManager.config.ui_scale, 1.2, "UI scale should be saved to config")
+		assert_eq(font_size_value.text, "1.2", "UI scale value label should display 1.2")
 
-		# Test setting to 0.7 (minimum)
-		font_size_slider.value = 0.7
-		font_size_slider.value_changed.emit(0.7)
+		# Test setting to 0.8 (minimum)
+		font_size_slider.value = 0.8
+		font_size_slider.value_changed.emit(0.8)
 		await get_tree().process_frame
-		assert_eq(ConfigManager.config.font_scale, 0.7, "Font scale should be 0.7")
+		assert_eq(ConfigManager.config.ui_scale, 0.8, "UI scale should be 0.8")
 
-		# Test setting to 1.4 (maximum)
-		font_size_slider.value = 1.4
-		font_size_slider.value_changed.emit(1.4)
+		# Test setting to 1.5 (maximum)
+		font_size_slider.value = 1.5
+		font_size_slider.value_changed.emit(1.5)
 		await get_tree().process_frame
-		assert_eq(ConfigManager.config.font_scale, 1.4, "Font scale should be 1.4")
+		assert_eq(ConfigManager.config.ui_scale, 1.5, "UI scale should be 1.5")

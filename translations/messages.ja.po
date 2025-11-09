@@ -56,9 +56,25 @@ msgstr "言語"
 msgid "Resolution"
 msgstr "解像度"
 
-#: Label for font size setting
-msgid "Font Size"
-msgstr "フォントサイズ"
+#: Label for UI scale setting - scales the entire interface proportionally
+msgid "UI Scale"
+msgstr "UIスケール"
+
+#: Label for window mode dropdown
+msgid "Window Mode"
+msgstr "ウィンドウモード"
+
+#: Window mode option - traditional windowed mode with custom resolution
+msgid "Windowed"
+msgstr "ウィンドウ"
+
+#: Window mode option - borderless fullscreen at native resolution (recommended)
+msgid "Borderless Fullscreen"
+msgstr "ボーダーレスフルスクリーン"
+
+#: Window mode option - exclusive fullscreen mode
+msgid "Fullscreen"
+msgstr "フルスクリーン"
 
 #: Resolution option
 msgid "1920 x 1080 (Full HD)"
@@ -79,10 +95,6 @@ msgstr "1366 x 768"
 #: Resolution option
 msgid "1024 x 768"
 msgstr "1024 x 768"
-
-#: Button to toggle fullscreen mode
-msgid "Fullscreen"
-msgstr "フルスクリーン"
 
 #: Button to return to menu (short form)
 msgid "Back to Menu"
