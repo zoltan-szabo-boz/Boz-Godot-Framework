@@ -127,13 +127,21 @@ func set_ui_scale(scale: float):
 	EventBus.emit("ui_scale_changed", {"scale": config.ui_scale})
 
 func apply_resolution():
-	# Only apply resolution in windowed mode
+	# Set render resolution for all modes (affects performance and visual quality)
+	# The game will render at this resolution and scale to fit the display
+	get_tree().root.content_scale_size = config.resolution
+	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
+	get_tree().root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+
+	# In windowed mode, also set the window size to match render resolution
 	if config.window_mode == WindowMode.WINDOWED:
 		DisplayServer.window_set_size(config.resolution)
 
 		var screen_size = DisplayServer.screen_get_size()
 		var window_pos = (screen_size - config.resolution) / 2
 		DisplayServer.window_set_position(window_pos)
+
+	print("ConfigManager: Applied render resolution: %dx%d" % [config.resolution.x, config.resolution.y])
 
 func apply_window_mode():
 	match config.window_mode:
@@ -145,20 +153,24 @@ func apply_window_mode():
 			print("ConfigManager: Applied WINDOWED mode")
 
 		WindowMode.BORDERLESS:
-			# Borderless fullscreen - uses native resolution, fast alt-tab
+			# Borderless fullscreen - display at native resolution, render at configured resolution
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
-			# Set to native screen size
+			# Set display to native screen size
 			var screen_size = DisplayServer.screen_get_size()
 			DisplayServer.window_set_size(screen_size)
 			DisplayServer.window_set_position(Vector2i(0, 0))
-			print("ConfigManager: Applied BORDERLESS mode at %dx%d" % [screen_size.x, screen_size.y])
+			# Apply render resolution (game renders at config.resolution, scales to screen_size)
+			apply_resolution()
+			print("ConfigManager: Applied BORDERLESS mode - display: %dx%d, render: %dx%d" % [screen_size.x, screen_size.y, config.resolution.x, config.resolution.y])
 
 		WindowMode.FULLSCREEN:
-			# Exclusive fullscreen mode
+			# Exclusive fullscreen mode - render at configured resolution
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-			print("ConfigManager: Applied FULLSCREEN mode")
+			# Apply render resolution
+			apply_resolution()
+			print("ConfigManager: Applied FULLSCREEN mode - render: %dx%d" % [config.resolution.x, config.resolution.y])
 
 func apply_ui_scale():
 	# Apply UI scaling using Godot's built-in content scale factor
@@ -171,10 +183,6 @@ func get_resolution_index() -> int:
 		if available_resolutions[i] == config.resolution:
 			return i
 	return 0
-
-func is_resolution_applicable() -> bool:
-	# Resolution selection only applies in windowed mode
-	return config.window_mode == WindowMode.WINDOWED
 
 func set_high_contrast(enabled: bool):
 	config.high_contrast = enabled

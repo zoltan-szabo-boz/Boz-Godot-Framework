@@ -148,6 +148,9 @@ func test_resolution_visibility_based_on_window_mode():
 	var window_mode_dropdown = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/WindowModeDropdown")
 
 	if resolution_dropdown and resolution_label and window_mode_dropdown:
+		# Resolution controls should now be visible in ALL window modes
+		# This allows players to adjust render resolution for performance/quality in any mode
+
 		# Set to Windowed mode - resolution should be visible
 		window_mode_dropdown.select(0)
 		window_mode_dropdown.item_selected.emit(0)
@@ -155,19 +158,19 @@ func test_resolution_visibility_based_on_window_mode():
 		assert_true(resolution_dropdown.visible, "Resolution dropdown should be visible in windowed mode")
 		assert_true(resolution_label.visible, "Resolution label should be visible in windowed mode")
 
-		# Set to Borderless mode - resolution should be hidden
+		# Set to Borderless mode - resolution should still be visible (controls render resolution)
 		window_mode_dropdown.select(1)
 		window_mode_dropdown.item_selected.emit(1)
 		await get_tree().process_frame
-		assert_false(resolution_dropdown.visible, "Resolution dropdown should be hidden in borderless mode")
-		assert_false(resolution_label.visible, "Resolution label should be hidden in borderless mode")
+		assert_true(resolution_dropdown.visible, "Resolution dropdown should be visible in borderless mode")
+		assert_true(resolution_label.visible, "Resolution label should be visible in borderless mode")
 
-		# Set to Fullscreen mode - resolution should be hidden
+		# Set to Fullscreen mode - resolution should still be visible (controls render resolution)
 		window_mode_dropdown.select(2)
 		window_mode_dropdown.item_selected.emit(2)
 		await get_tree().process_frame
-		assert_false(resolution_dropdown.visible, "Resolution dropdown should be hidden in fullscreen mode")
-		assert_false(resolution_label.visible, "Resolution label should be hidden in fullscreen mode")
+		assert_true(resolution_dropdown.visible, "Resolution dropdown should be visible in fullscreen mode")
+		assert_true(resolution_label.visible, "Resolution label should be visible in fullscreen mode")
 
 # Test: Back button returns to main menu
 func test_back_button_returns_to_menu():

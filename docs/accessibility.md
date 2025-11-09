@@ -29,18 +29,53 @@ var current_scale = ConfigManager.config.ui_scale  # Get current scale
 - Maintains visual consistency by scaling everything proportionally
 - No layout breaking or text overflow issues
 
-### 2. Window Modes
+### 2. Resolution Settings (Render Resolution)
+
+**Purpose:** Allows users to control the game's rendering resolution for performance and visual quality balance.
+
+**Render Resolution vs Display Resolution:**
+- **Render Resolution:** The resolution at which the game is rendered (affects performance and visual quality)
+- **Display Resolution:** The physical resolution of the window/screen (set by window mode)
+- The framework decouples these two, allowing performance tuning in any window mode
+
+**How It Works:**
+- Player selects render resolution (e.g., 1920x1080, 1280x720)
+- Game renders at this resolution
+- Output is scaled to fit the display
+- Lower resolution = better performance, higher resolution = better visual quality
+
+**Available Resolutions:**
+- 1920 x 1080 (Full HD)
+- 1600 x 900 (HD+)
+- 1366 x 768
+- 1280 x 720 (HD)
+- 1024 x 768
+
+**Usage:**
+```gdscript
+ConfigManager.set_resolution(Vector2i(1920, 1080))  # Set render resolution
+var current_res = ConfigManager.config.resolution   # Get current resolution
+```
+
+**Benefits:**
+- **Performance Tuning:** Lower resolution improves FPS on lower-end hardware
+- **Visual Quality:** Higher resolution provides sharper visuals on capable systems
+- **Works in All Modes:** Available in windowed, borderless, and fullscreen modes
+- **Automatic Scaling:** Godot handles upscaling/downscaling automatically
+
+### 3. Window Modes
 
 **Purpose:** Provides flexible display options for different user preferences and setups.
 
 **Three Modes:**
-- **WINDOWED** - Traditional window with custom resolution (allows precise sizing)
-- **BORDERLESS** - Borderless fullscreen at native resolution (recommended, fast alt-tab)
+- **WINDOWED** - Traditional window where window size matches render resolution
+- **BORDERLESS** - Borderless fullscreen at native display resolution (recommended, fast alt-tab)
 - **FULLSCREEN** - Exclusive fullscreen mode (better for some older systems)
 
 **Implementation:**
-- Resolution controls only visible in windowed mode
-- Borderless mode uses native screen resolution
+- Resolution setting controls render resolution in all modes
+- Windowed mode: window size matches render resolution
+- Borderless/Fullscreen modes: display at native resolution, render at selected resolution
 - All modes work seamlessly with multi-monitor setups
 
 **Usage:**
@@ -51,10 +86,10 @@ ConfigManager.set_window_mode(ConfigManager.WindowMode.BORDERLESS)
 **Benefits:**
 - Borderless mode prevents issues with resolution scaling on modern displays
 - Fast switching between windows without minimizing/maximizing delays
-- No blurriness from non-native resolutions
+- Players can tune performance in any window mode
 - OS UI remains accessible (taskbar, system tray, etc.)
 
-### 3. High Contrast Mode
+### 4. High Contrast Mode
 
 **Purpose:** WCAG AAA compliant theme that automatically converts any custom theme to a high contrast version, or allows developers to provide their own custom high contrast theme.
 
@@ -246,9 +281,9 @@ All accessibility features are accessible from the main menu:
 1. Press "Options" on main menu
 2. Navigate to "Graphics" tab
 3. Adjust settings:
+   - Window Mode dropdown (Windowed/Borderless/Fullscreen)
+   - Resolution dropdown (render resolution, available in all modes)
    - UI Scale slider (0.8 - 1.5)
-   - Window Mode dropdown
-   - Resolution dropdown (windowed mode only)
    - High Contrast Mode checkbox
 
 ## EventBus Integration

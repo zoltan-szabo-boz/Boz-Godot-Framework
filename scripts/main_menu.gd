@@ -3,7 +3,6 @@ extends Control
 @onready var main_menu_panel = $MarginContainer/HBoxContainer/MainMenuPanel
 @onready var options_panel = $MarginContainer/HBoxContainer/OptionsPanel
 @onready var tab_container = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer
-@onready var resolution_label = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/ResolutionLabel
 @onready var resolution_dropdown = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/ResolutionDropdown
 @onready var window_mode_dropdown = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/WindowModeDropdown
 @onready var font_size_slider = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeSlider
@@ -24,9 +23,6 @@ func _ready():
 
 	# Populate resolution dropdown
 	_populate_resolution_dropdown()
-
-	# Update resolution visibility based on window mode
-	_update_resolution_visibility()
 
 	# Populate language dropdown
 	_populate_language_dropdown()
@@ -152,15 +148,6 @@ func _on_window_mode_selected(index: int):
 
 	# Set the window mode through ConfigManager
 	ConfigManager.set_window_mode(selected_mode)
-
-	# Update resolution visibility
-	_update_resolution_visibility()
-
-func _update_resolution_visibility():
-	# Resolution controls only visible in windowed mode
-	var is_visible = ConfigManager.is_resolution_applicable()
-	resolution_label.visible = is_visible
-	resolution_dropdown.visible = is_visible
 
 func _populate_language_dropdown():
 	# Clear existing items

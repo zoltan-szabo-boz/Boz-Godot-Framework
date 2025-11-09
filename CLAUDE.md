@@ -72,10 +72,16 @@ Filesystem abstraction layer designed for console compatibility:
 Manages game settings and persists them via FileManager:
 
 - **Window Modes**: Three display modes for PC gaming
-  - `WINDOWED` - Traditional windowed mode with custom resolution control
-  - `BORDERLESS` - Borderless fullscreen at native resolution (default, recommended for PC gaming)
+  - `WINDOWED` - Traditional windowed mode where window size matches render resolution
+  - `BORDERLESS` - Borderless fullscreen at native display resolution (default, recommended for PC gaming)
   - `FULLSCREEN` - Exclusive fullscreen mode
-- **Resolution Settings**: 1920x1080, 1600x900, 1366x768, 1280x720, 1024x768 (applies only in windowed mode)
+- **Resolution Settings (Render Resolution)**: Controls the rendering resolution for performance/quality balance
+  - Available in ALL window modes (not just windowed)
+  - Options: 1920x1080, 1600x900, 1366x768, 1280x720, 1024x768
+  - Game renders at selected resolution and scales to fit display
+  - Lower resolution = better performance, higher resolution = better visual quality
+  - Windowed mode: window size matches render resolution
+  - Borderless/Fullscreen modes: display at native resolution, render at selected resolution
 - **UI Scale**: Scales entire interface proportionally (0.8x to 1.5x range for accessibility)
   - Uses `content_scale_factor` to scale viewport/UI tree
   - Affects text, buttons, icons, spacing - everything scales together
