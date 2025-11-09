@@ -127,21 +127,28 @@ func set_ui_scale(scale: float):
 	EventBus.emit("ui_scale_changed", {"scale": config.ui_scale})
 
 func apply_resolution():
-	# Set render resolution for all modes (affects performance and visual quality)
-	# The game will render at this resolution and scale to fit the display
-	get_tree().root.content_scale_size = config.resolution
-	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
-	get_tree().root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
-
-	# In windowed mode, also set the window size to match render resolution
+	# In windowed mode, use 1:1 pixel mapping (no scaling) for sharp text
+	# In borderless/fullscreen modes, use viewport scaling to fit display
 	if config.window_mode == WindowMode.WINDOWED:
+		# Disable content scaling - render at window size directly (1:1 pixels)
+		get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
+		get_tree().root.content_scale_size = Vector2i(0, 0)
+
+		# Set window size to desired resolution
 		DisplayServer.window_set_size(config.resolution)
 
+		# Center window on screen
 		var screen_size = DisplayServer.screen_get_size()
 		var window_pos = (screen_size - config.resolution) / 2
 		DisplayServer.window_set_position(window_pos)
 
-	print("ConfigManager: Applied render resolution: %dx%d" % [config.resolution.x, config.resolution.y])
+		print("ConfigManager: Applied render resolution: %dx%d (1:1 pixels, no scaling)" % [config.resolution.x, config.resolution.y])
+	else:
+		# Use viewport scaling for borderless/fullscreen modes
+		get_tree().root.content_scale_size = config.resolution
+		get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
+		get_tree().root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+		print("ConfigManager: Applied render resolution: %dx%d (with viewport scaling)" % [config.resolution.x, config.resolution.y])
 
 func apply_window_mode():
 	match config.window_mode:

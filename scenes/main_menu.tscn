@@ -220,6 +220,8 @@ text = "Back to Menu"
 [connection signal="item_selected" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/ResolutionDropdown" to="." method="_on_resolution_dropdown_selected"]
 [connection signal="item_selected" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/WindowModeDropdown" to="." method="_on_window_mode_selected"]
 [connection signal="value_changed" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeSlider" to="." method="_on_font_size_slider_value_changed"]
+[connection signal="drag_started" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeSlider" to="." method="_on_font_size_slider_drag_started"]
+[connection signal="drag_ended" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeSlider" to="." method="_on_font_size_slider_drag_ended"]
 [connection signal="item_selected" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Language/VBoxContainer/LanguageDropdown" to="." method="_on_language_dropdown_selected"]
 [connection signal="toggled" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/HighContrastCheckbox" to="." method="_on_high_contrast_checkbox_toggled"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/BackButtonMargin/BackButton" to="." method="_on_back_to_menu_pressed"]

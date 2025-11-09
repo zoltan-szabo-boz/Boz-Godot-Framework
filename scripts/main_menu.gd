@@ -10,6 +10,9 @@ extends Control
 @onready var high_contrast_checkbox = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/HighContrastCheckbox
 @onready var language_dropdown = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Language/VBoxContainer/LanguageDropdown
 
+# Track if UI scale slider is currently being dragged to prevent viewport jumping
+var _is_dragging_ui_scale: bool = false
+
 func _ready():
 	# Initialize window mode dropdown
 	_populate_window_mode_dropdown()
@@ -204,11 +207,23 @@ func _on_language_dropdown_selected(index: int):
 	print("Language changed to: %s" % lang.code)
 
 func _on_font_size_slider_value_changed(value: float):
-	# Update the label to show current value
+	# Update the label to show current value (always show preview)
 	_update_ui_scale_label(value)
 
-	# Save to config and trigger EventBus notification
-	ConfigManager.set_ui_scale(value)
+	# Only apply scale immediately if not dragging
+	# This prevents viewport jumping while the user is adjusting the slider
+	if not _is_dragging_ui_scale:
+		ConfigManager.set_ui_scale(value)
+
+func _on_font_size_slider_drag_started():
+	# User started dragging - don't apply scale until they finish
+	_is_dragging_ui_scale = true
+
+func _on_font_size_slider_drag_ended(value_changed: bool):
+	# User finished dragging - apply scale now if value changed
+	_is_dragging_ui_scale = false
+	if value_changed:
+		ConfigManager.set_ui_scale(font_size_slider.value)
 
 func _update_ui_scale_label(value: float):
 	# Format value to 1 decimal place

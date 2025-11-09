@@ -39,10 +39,10 @@ var current_scale = ConfigManager.config.ui_scale  # Get current scale
 - The framework decouples these two, allowing performance tuning in any window mode
 
 **How It Works:**
-- Player selects render resolution (e.g., 1920x1080, 1280x720)
-- Game renders at this resolution
-- Output is scaled to fit the display
+- **Windowed Mode:** Window size is set to the selected resolution with 1:1 pixel mapping (no scaling) for sharp, crisp text and graphics
+- **Borderless/Fullscreen Modes:** Game renders at selected resolution and scales to fit the display using viewport scaling
 - Lower resolution = better performance, higher resolution = better visual quality
+- Scaling only occurs in borderless/fullscreen modes to maintain text sharpness in windowed mode
 
 **Available Resolutions:**
 - 1920 x 1080 (Full HD)
@@ -58,24 +58,25 @@ var current_res = ConfigManager.config.resolution   # Get current resolution
 ```
 
 **Benefits:**
-- **Performance Tuning:** Lower resolution improves FPS on lower-end hardware
-- **Visual Quality:** Higher resolution provides sharper visuals on capable systems
-- **Works in All Modes:** Available in windowed, borderless, and fullscreen modes
-- **Automatic Scaling:** Godot handles upscaling/downscaling automatically
+- **Performance Tuning:** Lower resolution improves FPS in borderless/fullscreen modes
+- **Sharp Text:** Windowed mode uses 1:1 pixel mapping for crisp, blur-free rendering
+- **Visual Quality:** Higher resolution provides better visuals on capable systems
+- **Works in All Modes:** Resolution control available in all window modes
+- **Smart Scaling:** Viewport scaling only when needed (borderless/fullscreen), disabled for windowed mode
 
 ### 3. Window Modes
 
 **Purpose:** Provides flexible display options for different user preferences and setups.
 
 **Three Modes:**
-- **WINDOWED** - Traditional window where window size matches render resolution
+- **WINDOWED** - Traditional window where window size matches resolution with 1:1 pixel mapping (sharp text)
 - **BORDERLESS** - Borderless fullscreen at native display resolution (recommended, fast alt-tab)
 - **FULLSCREEN** - Exclusive fullscreen mode (better for some older systems)
 
 **Implementation:**
-- Resolution setting controls render resolution in all modes
-- Windowed mode: window size matches render resolution
-- Borderless/Fullscreen modes: display at native resolution, render at selected resolution
+- **Windowed mode:** Window size = selected resolution, content scaling disabled (1:1 pixels, no blur)
+- **Borderless mode:** Display at native screen resolution, game renders at selected resolution and scales to fit
+- **Fullscreen mode:** Display fullscreen, game renders at selected resolution and scales to fit
 - All modes work seamlessly with multi-monitor setups
 
 **Usage:**
@@ -84,10 +85,11 @@ ConfigManager.set_window_mode(ConfigManager.WindowMode.BORDERLESS)
 ```
 
 **Benefits:**
-- Borderless mode prevents issues with resolution scaling on modern displays
-- Fast switching between windows without minimizing/maximizing delays
-- Players can tune performance in any window mode
-- OS UI remains accessible (taskbar, system tray, etc.)
+- **Windowed mode:** Provides sharp, pixel-perfect rendering with no scaling blur
+- **Borderless mode:** Fast alt-tab, no minimize/maximize delays, still allows performance tuning via resolution
+- **Fullscreen mode:** Traditional exclusive fullscreen for systems that work better with it
+- Players can tune performance via resolution in borderless/fullscreen modes
+- OS UI remains accessible in windowed and borderless modes (taskbar, system tray, etc.)
 
 ### 4. High Contrast Mode
 
