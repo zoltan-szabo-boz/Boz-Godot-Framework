@@ -98,15 +98,17 @@ func test_options_panel_has_tabcontainer():
 	assert_not_null(graphics_tab, "Graphics tab should exist")
 	assert_not_null(language_tab, "Language tab should exist")
 
-# Test: Graphics tab has resolution dropdown, window mode dropdown, and font size slider
+#Test: Graphics tab has resolution dropdown, window mode dropdown, font size slider, and high contrast checkbox
 func test_graphics_tab_has_controls():
 	var resolution_dropdown = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/ResolutionDropdown")
 	var window_mode_dropdown = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/WindowModeDropdown")
 	var font_size_slider = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeSlider")
+	var high_contrast_checkbox = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/HighContrastCheckbox")
 
 	assert_not_null(resolution_dropdown, "Resolution dropdown should exist")
 	assert_not_null(window_mode_dropdown, "Window mode dropdown should exist")
 	assert_not_null(font_size_slider, "UI scale slider should exist")
+	assert_not_null(high_contrast_checkbox, "High contrast checkbox should exist")
 	if resolution_dropdown:
 		assert_eq(resolution_dropdown.item_count, 5, "Resolution dropdown should have 5 options")
 	if window_mode_dropdown:
@@ -247,6 +249,23 @@ func test_tab_titles_update_on_language_change():
 		# We can't easily test the exact translated text, but we can verify they're not empty
 		assert_gt(tab_container.get_tab_title(0).length(), 0, "Graphics tab title should not be empty")
 		assert_gt(tab_container.get_tab_title(1).length(), 0, "Language tab title should not be empty")
+
+# Test: High contrast checkbox toggles high contrast mode
+func test_high_contrast_checkbox_toggles_mode():
+	var high_contrast_checkbox = main_menu.get_node_or_null("MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/HighContrastCheckbox")
+
+	if high_contrast_checkbox:
+		# Test enabling high contrast
+		high_contrast_checkbox.button_pressed = true
+		high_contrast_checkbox.toggled.emit(true)
+		await get_tree().process_frame
+		assert_eq(ConfigManager.config.high_contrast, true, "High contrast should be enabled")
+
+		# Test disabling high contrast
+		high_contrast_checkbox.button_pressed = false
+		high_contrast_checkbox.toggled.emit(false)
+		await get_tree().process_frame
+		assert_eq(ConfigManager.config.high_contrast, false, "High contrast should be disabled")
 
 # Test: Font size slider changes content scale
 func test_font_size_slider_changes_scale():

@@ -60,6 +60,14 @@ msgstr "解像度"
 msgid "UI Scale"
 msgstr "UIスケール"
 
+#: Label for high contrast mode setting - accessibility feature
+msgid "High Contrast Mode"
+msgstr "ハイコントラストモード"
+
+#: Checkbox text for enabling high contrast theme
+msgid "Enable high contrast"
+msgstr "ハイコントラストを有効にする"
+
 #: Label for window mode dropdown
 msgid "Window Mode"
 msgstr "ウィンドウモード"

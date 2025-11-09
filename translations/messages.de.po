@@ -60,6 +60,14 @@ msgstr "Auflösung"
 msgid "UI Scale"
 msgstr "UI-Skalierung"
 
+#: Label for high contrast mode setting - accessibility feature
+msgid "High Contrast Mode"
+msgstr "Hoher Kontrast Modus"
+
+#: Checkbox text for enabling high contrast theme
+msgid "Enable high contrast"
+msgstr "Hohen Kontrast aktivieren"
+
 #: Label for window mode dropdown
 msgid "Window Mode"
 msgstr "Fenstermodus"

@@ -8,6 +8,7 @@ extends Control
 @onready var window_mode_dropdown = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/WindowModeDropdown
 @onready var font_size_slider = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeSlider
 @onready var font_size_value = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/FontSizeContainer/FontSizeValue
+@onready var high_contrast_checkbox = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Graphics/VBoxContainer/HighContrastCheckbox
 @onready var language_dropdown = $MarginContainer/HBoxContainer/OptionsPanel/VBoxContainer/TabContainer/Language/VBoxContainer/LanguageDropdown
 
 func _ready():
@@ -17,6 +18,9 @@ func _ready():
 	# Initialize UI scale slider from config
 	font_size_slider.value = ConfigManager.config.ui_scale
 	_update_ui_scale_label(ConfigManager.config.ui_scale)
+
+	# Initialize high contrast checkbox from config
+	high_contrast_checkbox.button_pressed = ConfigManager.config.high_contrast
 
 	# Populate resolution dropdown
 	_populate_resolution_dropdown()
@@ -36,6 +40,9 @@ func _ready():
 	# Subscribe to UI scale change events
 	EventBus.subscribe("ui_scale_changed", _on_ui_scale_changed)
 
+	# Subscribe to high contrast change events
+	EventBus.subscribe("high_contrast_changed", _on_high_contrast_changed)
+
 	# Apply initial UI scale (ConfigManager already does this in _ready())
 	ConfigManager.apply_ui_scale()
 
@@ -45,6 +52,7 @@ func _exit_tree():
 	# Unsubscribe from EventBus when leaving tree
 	EventBus.unsubscribe("language_changed", _on_language_changed)
 	EventBus.unsubscribe("ui_scale_changed", _on_ui_scale_changed)
+	EventBus.unsubscribe("high_contrast_changed", _on_high_contrast_changed)
 
 func _register_tooltips():
 	# Dynamic tooltip with current time for demonstration
@@ -223,4 +231,13 @@ func _on_ui_scale_changed(_data: Dictionary):
 	# UI scale is now applied automatically by ConfigManager
 	# This callback is kept for potential future UI updates
 	# _data contains: {"scale": float}
+	pass
+
+func _on_high_contrast_checkbox_toggled(toggled_on: bool):
+	# Update high contrast setting through ConfigManager
+	ConfigManager.set_high_contrast(toggled_on)
+
+func _on_high_contrast_changed(_data: Dictionary):
+	# Update checkbox state if changed elsewhere
+	# _data contains: {"enabled": bool}
 	pass

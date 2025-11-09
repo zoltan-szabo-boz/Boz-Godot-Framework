@@ -26,6 +26,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `theme/` - Theme system classes
     - `theme_colors.gd` - Color palette constants and utilities
     - `theme_constants.gd` - Spacing, sizing, and layout constants
+    - `high_contrast_colors.gd` - WCAG AAA compliant high contrast color palette (legacy)
+    - `theme_converter.gd` - Automatic theme-to-high-contrast conversion utility
   - `utils/` - Utility classes with static helper functions
     - `time_utils.gd` - Time formatting and manipulation utilities
 - `themes/` - Godot theme resources (.tres)
@@ -41,6 +43,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `event_architecture.md` - Event system architecture guide
   - `localization_platform_integration.md` - Guide for translation platforms (Weblate, Crowdin, etc.)
   - `code_formatting.md` - Code formatting guidelines and VSCode setup
+  - `accessibility.md` - Accessibility features and implementation guide
 - `Dockerfile` - Docker image definition for headless testing
 - `docker-compose.yml` - Docker services: test, validate, shell
 
@@ -76,10 +79,22 @@ Manages game settings and persists them via FileManager:
 - **UI Scale**: Scales entire interface proportionally (0.8x to 1.5x range for accessibility)
   - Uses `content_scale_factor` to scale viewport/UI tree
   - Affects text, buttons, icons, spacing - everything scales together
+- **High Contrast Mode**: WCAG AAA compliant theme for visual accessibility
+  - **Two Approaches**:
+    1. Custom theme: Set `high_contrast_theme_path` to provide your own HC theme
+    2. Automatic: Leave `high_contrast_theme_path` empty for automatic conversion from base theme
+  - Theme paths: `base_theme_path` (default: from project.godot) and `high_contrast_theme_path` (default: "")
+  - Automatic conversion creates complete Theme resource with:
+    - Pure black backgrounds with pure white text for maximum contrast
+    - Bright, saturated accent colors for clear differentiation
+    - StyleBoxFlat resources with 3-4px white borders for panels/buttons
+    - Complete control styling (Button, Label, CheckButton, OptionButton)
+  - Runtime theme switching using `root.set_theme()` for actual visible changes
+  - See `docs/accessibility.md` for full documentation with examples
 - **Backward Compatibility**: Automatically converts old config formats (fullscreen bool → window_mode enum, font_scale → ui_scale)
 - Settings stored in `user://config.cfg`
 - Auto-loads and applies settings on startup
-- Emits `ui_scale_changed` event via EventBus when UI scale changes
+- Emits `ui_scale_changed` and `high_contrast_changed` events via EventBus
 - Singleton accessible via `ConfigManager` global
 
 ### LocalizationManager (scripts/localization_manager.gd)
@@ -198,6 +213,73 @@ var semi_transparent := ThemeColors.with_alpha(ThemeColors.BG_DARK, 0.5)
 - Leverage utility functions for dynamic color adjustments
 
 **Complete documentation:** See `docs/theme_system.md` for comprehensive usage guide, examples, and best practices.
+
+## Accessibility System
+
+The framework implements comprehensive accessibility features to ensure the game is playable by users with various visual impairments and display preferences.
+
+### Features
+
+**1. UI Scale (0.8x - 1.5x)**
+- Scales entire interface proportionally using `content_scale_factor`
+- Affects all elements: text, buttons, icons, spacing, layouts
+- Prevents layout breaking and text overflow
+- Accessible via slider in Graphics settings
+
+**2. Window Modes**
+- **WINDOWED:** Custom resolution with window controls
+- **BORDERLESS:** Native resolution, fast alt-tab (recommended)
+- **FULLSCREEN:** Exclusive mode for older systems
+- Resolution controls only visible in windowed mode
+
+**3. High Contrast Mode with Automatic Theme Conversion**
+- **ThemeConverter utility:** Automatically converts ANY theme to WCAG AAA compliant high contrast
+- Game developers can design custom themes and automatically get accessible versions
+- Analyzes luminance to determine color roles (background/foreground/accent)
+- Ensures 7:1 contrast ratio (WCAG AAA standard)
+- Preserves hue relationships to maintain brand identity
+- Pure black backgrounds with pure white text for maximum readability
+- Saturated accent colors for clear differentiation
+- Runtime theme switching (no scene reload required)
+- Accessible via checkbox in Graphics settings
+
+### Usage
+
+```gdscript
+# Set UI scale
+ConfigManager.set_ui_scale(1.2)  # 120%
+
+# Change window mode
+ConfigManager.set_window_mode(ConfigManager.WindowMode.BORDERLESS)
+
+# Toggle high contrast (auto-converts your theme)
+ConfigManager.set_high_contrast(true)
+
+# Manual theme conversion (for custom themes)
+var converter := ThemeConverter.new()
+var your_palette = {"primary": Color(...), "bg_dark": Color(...)}
+var hc_palette := converter.convert_palette(your_palette)
+
+# Subscribe to changes
+EventBus.subscribe("ui_scale_changed", func(data): print("New scale: ", data.scale))
+EventBus.subscribe("high_contrast_changed", func(data): print("Enabled: ", data.enabled))
+```
+
+### Color Palettes
+
+**Standard Theme (ThemeColors):**
+- scripts/theme/theme_colors.gd
+- Balanced colors for general use
+- WCAG AA compliant minimum
+
+**High Contrast Theme (ThemeConverter):**
+- scripts/theme/theme_converter.gd
+- Automatic conversion from any theme to high contrast
+- WCAG AAA compliant (7:1+ ratio guaranteed)
+- Preserves brand identity while maximizing visibility
+- Convert entire palettes with `converter.convert_palette()`
+
+**Complete documentation:** See `docs/accessibility.md` for implementation guide and best practices.
 
 ## Localization System
 

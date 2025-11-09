@@ -2,6 +2,10 @@ extends Node
 
 const CONFIG_FILE = "user://config.cfg"
 
+# Preload theme classes for conversion
+const ThemeColors = preload("res://scripts/theme/theme_colors.gd")
+const ThemeConverter = preload("res://scripts/theme/theme_converter.gd")
+
 # Window mode enum
 enum WindowMode {
 	WINDOWED = 0,        # Traditional windowed mode with resolution control
@@ -12,8 +16,17 @@ enum WindowMode {
 var config = {
 	"resolution": Vector2i(1152, 648),
 	"window_mode": WindowMode.BORDERLESS,  # Default to borderless (modern PC standard)
-	"ui_scale": 1.0
+	"ui_scale": 1.0,
+	"high_contrast": false  # Accessibility: high contrast theme for better visibility
 }
+
+# Theme paths - developers can override these
+var base_theme_path: String = "res://themes/base_theme.tres"
+var high_contrast_theme_path: String = ""  # Empty = auto-convert base theme
+
+# Cached themes
+var _base_theme: Theme = null
+var _high_contrast_theme: Theme = null
 
 var available_resolutions = [
 	Vector2i(1920, 1080),
@@ -28,6 +41,10 @@ func _ready():
 	apply_window_mode()
 	# Apply UI scale immediately
 	apply_ui_scale()
+	# Load themes
+	_load_themes()
+	# Apply high contrast theme if enabled
+	apply_high_contrast_theme()
 
 func _notification(what):
 	# Ensure config is saved on exit
@@ -43,6 +60,9 @@ func save_config(flush_immediately: bool = true):
 			"resolution_y": config.resolution.y,
 			"window_mode": config.window_mode,
 			"ui_scale": config.ui_scale
+		},
+		"accessibility": {
+			"high_contrast": config.high_contrast
 		}
 	}
 
@@ -78,6 +98,11 @@ func load_config():
 
 		# Support loading old font_scale config and converting to ui_scale
 		config.ui_scale = display.get("ui_scale", display.get("font_scale", config.ui_scale))
+
+	# Load accessibility settings
+	if config_data.has("accessibility"):
+		var accessibility = config_data.accessibility
+		config.high_contrast = accessibility.get("high_contrast", config.high_contrast)
 
 func set_resolution(resolution: Vector2i):
 	config.resolution = resolution
@@ -150,3 +175,133 @@ func get_resolution_index() -> int:
 func is_resolution_applicable() -> bool:
 	# Resolution selection only applies in windowed mode
 	return config.window_mode == WindowMode.WINDOWED
+
+func set_high_contrast(enabled: bool):
+	config.high_contrast = enabled
+	save_config()
+	apply_high_contrast_theme()
+	# Emit event via EventBus for UI to react
+	EventBus.emit("high_contrast_changed", {"enabled": config.high_contrast})
+	print("ConfigManager: High contrast mode %s" % ("enabled" if enabled else "disabled"))
+
+func _load_themes():
+	# Load base theme
+	if ResourceLoader.exists(base_theme_path):
+		_base_theme = load(base_theme_path)
+		print("ConfigManager: Loaded base theme from %s" % base_theme_path)
+	else:
+		print("ConfigManager: Warning - base theme not found at %s" % base_theme_path)
+
+	# Load or generate high contrast theme
+	if high_contrast_theme_path != "" and ResourceLoader.exists(high_contrast_theme_path):
+		# Developer provided custom high contrast theme
+		_high_contrast_theme = load(high_contrast_theme_path)
+		print("ConfigManager: Loaded custom high contrast theme from %s" % high_contrast_theme_path)
+	elif _base_theme != null:
+		# Auto-convert base theme to high contrast
+		_high_contrast_theme = _create_high_contrast_theme_from_base()
+		print("ConfigManager: Auto-generated high contrast theme from base theme")
+	else:
+		print("ConfigManager: Warning - cannot create high contrast theme, no base theme available")
+
+func _create_high_contrast_theme_from_base() -> Theme:
+	# Create a new theme based on the base theme with high contrast colors
+	var hc_theme := Theme.new()
+	var converter := ThemeConverter.new()
+
+	# Copy the base theme structure
+	if _base_theme != null:
+		# Note: We can't directly clone Theme, so we'll create a new one
+		# and apply high contrast colors to common controls
+
+		# Convert key colors
+		var hc_text := converter.to_high_contrast_foreground(ThemeColors.TEXT_PRIMARY, false)
+		var hc_text_disabled := converter.to_high_contrast_foreground(ThemeColors.TEXT_DISABLED, false)
+		var hc_bg_dark := converter.to_high_contrast_background(ThemeColors.BG_DARK, false)
+		var hc_primary := converter.to_high_contrast_accent(ThemeColors.PRIMARY)
+
+		# Apply to Button
+		hc_theme.set_color("font_color", "Button", hc_text)
+		hc_theme.set_color("font_hover_color", "Button", hc_text)
+		hc_theme.set_color("font_pressed_color", "Button", hc_text)
+		hc_theme.set_color("font_disabled_color", "Button", hc_text_disabled)
+
+		# Apply to Label
+		hc_theme.set_color("font_color", "Label", hc_text)
+
+		# Apply to CheckButton
+		hc_theme.set_color("font_color", "CheckButton", hc_text)
+		hc_theme.set_color("font_hover_color", "CheckButton", hc_text)
+		hc_theme.set_color("font_pressed_color", "CheckButton", hc_text)
+
+		# Apply to OptionButton
+		hc_theme.set_color("font_color", "OptionButton", hc_text)
+		hc_theme.set_color("font_hover_color", "OptionButton", hc_text)
+
+		# Create high contrast StyleBoxFlat for panels
+		var panel_style := StyleBoxFlat.new()
+		panel_style.bg_color = hc_bg_dark
+		panel_style.border_color = Color.WHITE
+		panel_style.border_width_left = 3
+		panel_style.border_width_top = 3
+		panel_style.border_width_right = 3
+		panel_style.border_width_bottom = 3
+		panel_style.corner_radius_top_left = 4
+		panel_style.corner_radius_top_right = 4
+		panel_style.corner_radius_bottom_left = 4
+		panel_style.corner_radius_bottom_right = 4
+		hc_theme.set_stylebox("panel", "Panel", panel_style)
+
+		# Create high contrast button styles
+		var button_normal := StyleBoxFlat.new()
+		button_normal.bg_color = hc_bg_dark
+		button_normal.border_color = Color.WHITE
+		button_normal.border_width_left = 3
+		button_normal.border_width_top = 3
+		button_normal.border_width_right = 3
+		button_normal.border_width_bottom = 3
+		button_normal.corner_radius_top_left = 4
+		button_normal.corner_radius_top_right = 4
+		button_normal.corner_radius_bottom_left = 4
+		button_normal.corner_radius_bottom_right = 4
+		button_normal.content_margin_left = 16
+		button_normal.content_margin_top = 8
+		button_normal.content_margin_right = 16
+		button_normal.content_margin_bottom = 8
+
+		var button_hover := button_normal.duplicate()
+		button_hover.bg_color = ThemeColors.lighten(hc_bg_dark, 0.3)
+		button_hover.border_color = hc_primary
+
+		var button_pressed := button_normal.duplicate()
+		button_pressed.bg_color = hc_primary
+
+		hc_theme.set_stylebox("normal", "Button", button_normal)
+		hc_theme.set_stylebox("hover", "Button", button_hover)
+		hc_theme.set_stylebox("pressed", "Button", button_pressed)
+		hc_theme.set_stylebox("focus", "Button", button_hover)
+
+		print("ConfigManager: High contrast theme created")
+		print("  - Text: %s (contrast: %.1f:1)" % [hc_text, converter.calculate_contrast_ratio(hc_text, hc_bg_dark)])
+		print("  - Primary: %s (contrast: %.1f:1)" % [hc_primary, converter.calculate_contrast_ratio(hc_primary, hc_bg_dark)])
+
+	return hc_theme
+
+func apply_high_contrast_theme():
+	# Apply or remove high contrast theme to the entire application
+	var root := get_tree().root
+
+	if config.high_contrast:
+		if _high_contrast_theme != null:
+			print("ConfigManager: Applying high contrast theme")
+			root.set_theme(_high_contrast_theme)
+		else:
+			print("ConfigManager: Warning - high contrast theme not available")
+	else:
+		print("ConfigManager: Restoring base theme")
+		# Restore base theme
+		if _base_theme != null:
+			root.set_theme(_base_theme)
+		else:
+			# Fall back to project default theme
+			root.set_theme(null)

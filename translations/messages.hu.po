@@ -60,6 +60,14 @@ msgstr "Felbontás"
 msgid "UI Scale"
 msgstr "Felület méretezése"
 
+#: Label for high contrast mode setting - accessibility feature
+msgid "High Contrast Mode"
+msgstr "Magas kontrasztú mód"
+
+#: Checkbox text for enabling high contrast theme
+msgid "Enable high contrast"
+msgstr "Magas kontraszt engedélyezése"
+
 #: Label for window mode dropdown
 msgid "Window Mode"
 msgstr "Ablak mód"
